@@ -1,19 +1,27 @@
 <?php
+/**
+ * Contact / Estimate form mailer — configured for InMotion Hosting.
+ * InMotion requires SMTP auth; PHP mail() is disabled on their servers.
+ *
+ * SETUP: Create an email account in cPanel (e.g. noreply@yourdomain.com).
+ * Then set the 4 config values below to match that account and your domain.
+ */
 
 require_once('phpmailer/class.phpmailer.php');
 require_once('phpmailer/class.smtp.php');
 
 $mail = new PHPMailer();
 
-//$mail->SMTPDebug = 3; // Enable verbose debug output
-$mail->isSMTP(); // Set mailer to use SMTP
-$mail->Host = 'sandbox.smtp.mailtrap.io'; // Specify main and backup SMTP servers
-$mail->SMTPAuth = true; // Enable SMTP authentication
-$mail->Username = 'ba556857363b8c'; // SMTP username
-$mail->Password = '029d06b5757b90'; // SMTP password
-$mail->SMTPSecure = 'tls'; // Enable TLS encryption, `ssl` also accepted
-$mail->SMTPAutoTLS = true; // Allow STARTTLS on supported ports
-$mail->Port = 2525; // TCP port to connect to
+// --- InMotion Hosting SMTP (Secure SSL/TLS - Recommended) ---
+$mail->isSMTP();
+$mail->Host       = 'mail.northsiderenovations.com';
+$mail->SMTPAuth   = true;
+$mail->Username   = 'noreply@northsiderenovations.com';
+$mail->Password   = '3PEMSqFwyHfafEc';
+$mail->SMTPSecure = 'ssl';   // SSL for port 465
+$mail->Port       = 465;     // Outgoing SMTP (SSL)
+
+//$mail->SMTPDebug = 2; // uncomment to troubleshoot
 
 $message = "";
 $status = "false";
@@ -37,12 +45,12 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 
  $botcheck = $_POST['form_botcheck'];
 
- $toemail = 'shabbirali2702@gmail.com'; // Your Email Address
- $toname = 'Shabbir Company'; // Your Name
+ $toemail = 'jeremyaylesworth@yahoo.com'; // Where estimate requests are sent
+ $toname  = 'Northside Renovations';
 
  if( $botcheck == '' ) {
 
- $mail->SetFrom( 'no-reply@northside-renovations.test' , 'Northside Renovations' );
+ $mail->SetFrom( $mail->Username , 'Northside Renovations' );
  $mail->AddReplyTo( $email , $name );
  $mail->AddAddress( $toemail , $toname );
  $mail->Subject = $subject;
