@@ -1189,6 +1189,8 @@ select:focus {
 	opacity: 0;
 	visibility: hidden;
 	z-index: 999999;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
 }
 .mobile-menu .menu-backdrop{
 	position: fixed;
@@ -1236,7 +1238,14 @@ select:focus {
     position: relative;
     display: inline-block;
 }
-
+.mobile-menu .mobile-menu-cta {
+    padding: 0 25px 20px;
+}
+.mobile-menu .mobile-menu-cta .btn-one {
+    display: block;
+    text-align: center;
+    width: 100%;
+}
 .mobile-menu-visible{
 	overflow: hidden;
 }
@@ -1252,6 +1261,7 @@ select:focus {
 	height: 100%;
 	max-height: 100%;
 	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 	background: #000000;
 	padding: 0px 0px;
 	z-index: 5;

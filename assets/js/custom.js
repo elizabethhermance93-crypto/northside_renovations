@@ -42,7 +42,7 @@ if($('.main-header li.dropdown ul').length){
 //Mobile Nav Hide Show
 if($('.mobile-menu').length){
 
-    $('.mobile-menu .menu-box').mCustomScrollbar();
+    try { $('.mobile-menu .menu-box').mCustomScrollbar(); } catch (e) { /* skip on iOS etc */ }
 
     var mobileMenuContent = $('.main-header .nav-outer .main-menu').html();
     $('.mobile-menu .menu-box .menu-outer').append(mobileMenuContent);

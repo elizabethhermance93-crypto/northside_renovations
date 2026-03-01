@@ -1382,7 +1382,16 @@
     display: none !important;
 }
 .nav-outer .mobile-nav-toggler{
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 12px 10px;
+    box-sizing: border-box;
 }
 .mobile-nav-toggler .icon-bar {
     position: relative;
