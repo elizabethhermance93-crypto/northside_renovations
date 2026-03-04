@@ -27,28 +27,28 @@ $message = "";
 $status = "false";
 
 if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
- // Verify reCAPTCHA (replace with your Secret Key from https://www.google.com/recaptcha/admin)
- $recaptcha_secret = '6Lcw-H8sAAAAAFbSah_Ax-_CbBFAN5KRbNvxmLWq';
- $recaptcha_response = '';
- if (isset($_POST['g-recaptcha-response'])) {
-     $recaptcha_response = trim((string) $_POST['g-recaptcha-response']);
- } elseif (isset($_POST['g_recaptcha_response'])) {
-     $recaptcha_response = trim((string) $_POST['g_recaptcha_response']);
- }
- $recaptcha_ok = false;
- if ($recaptcha_response !== '') {
-     $verify = @file_get_contents('https://www.google.com/recaptcha/api/siteverify?' . http_build_query([
-         'secret'   => $recaptcha_secret,
-         'response' => $recaptcha_response,
-         'remoteip' => $_SERVER['REMOTE_ADDR']
-     ]));
+ // Verify Cloudflare Turnstile (sign up at dash.cloudflare.com with any email, e.g. Yahoo)
+ $turnstile_secret = '0x4AAAAAACmZTqhqy7A9K1YeW_JCOtUM9Hg';
+ $turnstile_response = isset($_POST['cf-turnstile-response']) ? trim((string) $_POST['cf-turnstile-response']) : '';
+ $turnstile_ok = false;
+ if ($turnstile_response !== '') {
+     $ctx = stream_context_create(['http' => [
+         'method'  => 'POST',
+         'header'  => 'Content-Type: application/x-www-form-urlencoded',
+         'content' => http_build_query([
+             'secret'   => $turnstile_secret,
+             'response' => $turnstile_response,
+             'remoteip' => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''
+         ])
+     ]]);
+     $verify = @file_get_contents('https://challenges.cloudflare.com/turnstile/v0/siteverify', false, $ctx);
      if ($verify !== false) {
          $verify = json_decode($verify, true);
-         $recaptcha_ok = !empty($verify['success']);
+         $turnstile_ok = !empty($verify['success']);
      }
  }
- if (!$recaptcha_ok) {
-     $message = 'Please complete the reCAPTCHA to prove you\'re not a robot. If you did, your domain may not be allowed—add it at google.com/recaptcha/admin.';
+ if (!$turnstile_ok) {
+     $message = 'Please complete the security check. If you did, try again or use a supported browser.';
      $status = "false";
      echo json_encode(array( 'message' => $message, 'status' => $status));
      exit;

@@ -1,0 +1,29 @@
+Cloudflare Turnstile setup for Request an Estimate form
+======================================================
+
+Turnstile is used instead of reCAPTCHA so you can sign up with any email (e.g. Yahoo).
+
+CURRENT: Test keys are in place so the form works immediately. For production,
+replace them with your own keys from the Cloudflare dashboard.
+
+1. Sign up (any email, including Yahoo):
+   https://dash.cloudflare.com/sign-up
+
+2. Add Turnstile and get your keys:
+   - In Cloudflare dashboard: Turnstile → Add widget
+   - Choose widget type (e.g. "Managed" or "Non-interactive")
+   - Add your domain (e.g. northsiderenovations.com)
+   - You'll get a Site Key and Secret Key
+
+3. Update the Site Key (front-end):
+   - File: request-an-estimate.html
+   - Find: id="estimate-turnstile" data-sitekey="..."
+   - Replace the data-sitekey value with your Site Key
+
+4. Update the Secret Key (back-end):
+   - File: assets/inc/sendmail.php
+   - Find: $turnstile_secret = '...'
+   - Replace with your Secret Key (keep it private)
+
+Test keys (currently in use) always pass verification. Replace with real keys
+for production to block bots.

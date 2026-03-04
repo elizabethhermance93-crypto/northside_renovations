@@ -355,9 +355,9 @@
                                     <div class="col-xl-12">
                                         <div class="input-box recaptcha-box" style="min-height:90px; overflow:visible;">
                                             <p class="field-label" style="margin-bottom:10px;">Security check — please complete the box below</p>
-                                            <div class="g-recaptcha" id="estimate-recaptcha" data-sitekey="6Lcw-H8sAAAAANJqxA1LZN1lEgK6fuQqtpOH7dwc"></div>
-                                            <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response-input">
-                                            <label id="recaptcha-error" class="recaptcha-error" style="display:none; color:#c00; margin-top:8px;">Please complete the reCAPTCHA.</label>
+                                            <!-- Cloudflare Turnstile (use any email to sign up at dash.cloudflare.com) -->
+                                            <div class="cf-turnstile" id="estimate-turnstile" data-sitekey="0x4AAAAAACmZTqKkVuHdWWc4" data-theme="light"></div>
+                                            <label id="turnstile-error" class="recaptcha-error" style="display:none; color:#c00; margin-top:8px;">Please complete the security check.</label>
                                         </div>
                                     </div>
                                     <div class="col-xl-12">
@@ -558,19 +558,8 @@
 <script src="assets/js/parallax.min.js"></script>
 <script src="assets/js/jquery.tinyscrollbar.js"></script>
 <script src="assets/js/jQuery.style.switcher.min.js"></script>
-<!-- reCAPTCHA: load after DOM so widget can render into #estimate-recaptcha -->
-<script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit" async defer></script>
-<script>
-function onRecaptchaLoad() {
-  var el = document.getElementById('estimate-recaptcha');
-  if (el && typeof grecaptcha !== 'undefined' && grecaptcha.render) {
-    grecaptcha.render('estimate-recaptcha', {
-      sitekey: '6Lcw-H8sAAAAANJqxA1LZN1lEgK6fuQqtpOH7dwc',
-      theme: 'light'
-    });
-  }
-}
-</script>
+<!-- Cloudflare Turnstile - sign up at dash.cloudflare.com with any email (e.g. Yahoo) -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <!-- thm custom script -->
 <script src="assets/js/custom.js"></script>
 

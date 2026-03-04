@@ -1165,17 +1165,16 @@ if($("#contact-form").length){
     $contactForm.validate({
         ignore: [],
         submitHandler: function(form) {
-          var recaptchaToken = '';
-          // Require reCAPTCHA when widget is present (request-estimate page)
-          var $recaptchaWidget = $contactForm.find('#estimate-recaptcha');
-          if ($recaptchaWidget.length && typeof grecaptcha !== 'undefined') {
-            recaptchaToken = grecaptcha.getResponse();
-            if (!recaptchaToken || recaptchaToken.length === 0) {
-              $contactForm.find('#recaptcha-error').show();
-              $recaptchaWidget.closest('.recaptcha-box').get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Require Cloudflare Turnstile when widget is present (request-estimate page)
+          var $turnstileWidget = $contactForm.find('#estimate-turnstile');
+          if ($turnstileWidget.length) {
+            var turnstileToken = $contactForm.find('input[name="cf-turnstile-response"]').val();
+            if (!turnstileToken || turnstileToken.length === 0) {
+              $contactForm.find('#turnstile-error').show();
+              $turnstileWidget.closest('.recaptcha-box').get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
               return;
             }
-            $contactForm.find('#recaptcha-error').hide();
+            $contactForm.find('#turnstile-error').hide();
           }
 
           var services = [];
@@ -1193,17 +1192,9 @@ if($("#contact-form").length){
           form_btn.html(form_btn.prop('disabled', true).data("loading-text"));
           $(form).ajaxSubmit({
             dataType:  'json',
-            extraData: { 'g-recaptcha-response': recaptchaToken },
             success: function(data) {
               if( data.status == 'true' ) {
                 $(form).find('.form-control').val('');
-                if ($contactForm.find('#estimate-recaptcha').length && typeof grecaptcha !== 'undefined') {
-                  grecaptcha.reset();
-                }
-              } else {
-                if ($contactForm.find('#estimate-recaptcha').length && typeof grecaptcha !== 'undefined') {
-                  grecaptcha.reset();
-                }
               }
               form_btn.prop('disabled', false).html(form_btn_old_msg);
               $(form_result_div).html(data.message).fadeIn('slow');
