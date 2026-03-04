@@ -27,6 +27,28 @@ $message = "";
 $status = "false";
 
 if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+ // Verify reCAPTCHA (replace with your Secret Key from https://www.google.com/recaptcha/admin)
+ $recaptcha_secret = '6Lcw-H8sAAAAAFbSah_Ax-_CbBFAN5KRbNvxmLWq';
+ $recaptcha_response = isset($_POST['g-recaptcha-response']) ? trim($_POST['g-recaptcha-response']) : '';
+ $recaptcha_ok = false;
+ if ($recaptcha_response !== '') {
+     $verify = @file_get_contents('https://www.google.com/recaptcha/api/siteverify?' . http_build_query([
+         'secret'   => $recaptcha_secret,
+         'response' => $recaptcha_response,
+         'remoteip' => $_SERVER['REMOTE_ADDR']
+     ]));
+     if ($verify !== false) {
+         $verify = json_decode($verify, true);
+         $recaptcha_ok = !empty($verify['success']);
+     }
+ }
+ if (!$recaptcha_ok) {
+     $message = 'Please complete the reCAPTCHA to prove you\'re not a robot.';
+     $status = "false";
+     echo json_encode(array( 'message' => $message, 'status' => $status));
+     exit;
+ }
+
  if( $_POST['form_name'] != '' AND $_POST['form_email'] != '' AND $_POST['form_subject'] != '' ) {
 
  $name = $_POST['form_name'];

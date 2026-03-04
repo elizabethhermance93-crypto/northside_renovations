@@ -24,7 +24,9 @@
     <link href="assets/css/color/theme-color.css" id="jssDefault" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/rtl.css">
     <link rel="stylesheet" href="assets/css/style.css">
-	<link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <!-- reCAPTCHA v2 - Get your keys at https://www.google.com/recaptcha/admin -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" href="assets/images/favicon/favicon-32x32.jpg" sizes="32x32">
@@ -349,6 +351,14 @@
                                         <div class="input-box">    
                                             <label class="field-label" for="form_message">Project Details <span>*</span></label>
                                             <textarea id="form_message" name="form_message" placeholder="Tell us about your renovation goals, rooms included, and style preferences" required=""></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12">
+                                        <div class="input-box recaptcha-box">
+                                            <!-- Replace with your Site Key from https://www.google.com/recaptcha/admin (reCAPTCHA v2 "I'm not a robot") -->
+                                            <div class="g-recaptcha" id="estimate-recaptcha" data-sitekey="6Lcw-H8sAAAAANJqxA1LZN1lEgK6fuQqtpOH7dwc"></div>
+                                            <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response-input">
+                                            <label id="recaptcha-error" class="recaptcha-error" style="display:none; color:#c00; margin-top:8px;">Please complete the reCAPTCHA.</label>
                                         </div>
                                     </div>
                                     <div class="col-xl-12">

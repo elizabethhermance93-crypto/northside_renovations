@@ -1,0 +1,25 @@
+reCAPTCHA setup for Request an Estimate form
+=============================================
+
+The form uses Google reCAPTCHA v2 ("I'm not a robot" checkbox) to reduce spam.
+
+CURRENT: Test keys are in place so the form works immediately. For production,
+replace them with your own keys so only real users can submit.
+
+1. Get your keys (free):
+   https://www.google.com/recaptcha/admin
+   - Register your domain (e.g. northsiderenovations.com)
+   - Choose "reCAPTCHA v2" > "I'm not a robot" Checkbox
+   - You'll get a Site Key and a Secret Key
+
+2. Update the Site Key (front-end):
+   - File: request-an-estimate.html
+   - Find: id="estimate-recaptcha" data-sitekey="..."
+   - Replace the data-sitekey value with your Site Key
+
+3. Update the Secret Key (back-end):
+   - File: assets/inc/sendmail.php
+   - Find: $recaptcha_secret = '...'
+   - Replace with your Secret Key (keep it private)
+
+After updating both keys, the form will block bots and allow real submissions.
