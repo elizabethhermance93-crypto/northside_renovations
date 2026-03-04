@@ -193,8 +193,10 @@
 .main-slider .content .btns-box a:after{
     border-radius: 50px;    
 }
+@media only screen and (min-width: 992px) {
 .main-slider .content .btns-box .hero-estimate-mobile {
     display: none;
+}
 }
 .main-slider .active .content .btns-box{
 	opacity: 1;
