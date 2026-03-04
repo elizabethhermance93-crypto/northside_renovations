@@ -1165,55 +1165,25 @@ if($("#contact-form").length){
     $contactForm.validate({
         ignore: [],
         submitHandler: function(form) {
+          var recaptchaToken = '';
           // Require reCAPTCHA when widget is present (request-estimate page)
           var $recaptchaWidget = $contactForm.find('#estimate-recaptcha');
           if ($recaptchaWidget.length && typeof grecaptcha !== 'undefined') {
-            var recaptchaResponse = grecaptcha.getResponse();
-            if (!recaptchaResponse || recaptchaResponse.length === 0) {
+            recaptchaToken = grecaptcha.getResponse();
+            if (!recaptchaToken || recaptchaToken.length === 0) {
               $contactForm.find('#recaptcha-error').show();
               $recaptchaWidget.closest('.recaptcha-box').get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
               return;
             }
             $contactForm.find('#recaptcha-error').hide();
-            $contactForm.find('#g-recaptcha-response-input').val(recaptchaResponse);
           }
 
           var services = [];
           $contactForm.find('input[name="form_services[]"]:checked').each(function(){
             services.push($(this).val());
           });
-          var address = $contactForm.find('input[name="form_address"]').val();
-          var propertyType = $contactForm.find('[name="form_property_type"]').val();
-          var budget = $contactForm.find('[name="form_budget"]').val();
-          var timeline = $contactForm.find('[name="form_timeline"]').val();
-          var sqft = $contactForm.find('[name="form_sqft"]').val();
           var messageField = $contactForm.find('textarea[name="form_message"]');
-          var userMessage = messageField.val();
-          var compiledMessage = '';
-
-          if(address){
-            compiledMessage += 'Project Address: ' + address + '<br>';
-          }
-          if(propertyType){
-            compiledMessage += 'Property Type: ' + propertyType + '<br>';
-          }
-          if(budget){
-            compiledMessage += 'Budget: ' + budget + '<br>';
-          }
-          if(timeline){
-            compiledMessage += 'Preferred Timeline: ' + timeline + '<br>';
-          }
-          if(sqft){
-            compiledMessage += 'Approx. Sq Ft: ' + sqft + '<br>';
-          }
-          if(services.length){
-            compiledMessage += 'Services: ' + services.join(', ') + '<br><br>';
-          }
-          var formattedMessage = userMessage ? userMessage.replace(/\n/g, '<br>') : '';
-          if(formattedMessage){
-            compiledMessage += 'Project Details:<br>' + formattedMessage;
-          }
-          messageField.val(compiledMessage);
+          // Send form as-is; server builds email body from individual fields. Do NOT overwrite the textarea.
 
           var form_btn = $(form).find('button[type="submit"]');
           var form_result_div = '#form-result';
@@ -1223,9 +1193,14 @@ if($("#contact-form").length){
           form_btn.html(form_btn.prop('disabled', true).data("loading-text"));
           $(form).ajaxSubmit({
             dataType:  'json',
+            extraData: { 'g-recaptcha-response': recaptchaToken },
             success: function(data) {
               if( data.status == 'true' ) {
                 $(form).find('.form-control').val('');
+                if ($contactForm.find('#estimate-recaptcha').length && typeof grecaptcha !== 'undefined') {
+                  grecaptcha.reset();
+                }
+              } else {
                 if ($contactForm.find('#estimate-recaptcha').length && typeof grecaptcha !== 'undefined') {
                   grecaptcha.reset();
                 }

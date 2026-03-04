@@ -29,7 +29,12 @@ $status = "false";
 if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
  // Verify reCAPTCHA (replace with your Secret Key from https://www.google.com/recaptcha/admin)
  $recaptcha_secret = '6Lcw-H8sAAAAAFbSah_Ax-_CbBFAN5KRbNvxmLWq';
- $recaptcha_response = isset($_POST['g-recaptcha-response']) ? trim($_POST['g-recaptcha-response']) : '';
+ $recaptcha_response = '';
+ if (isset($_POST['g-recaptcha-response'])) {
+     $recaptcha_response = trim((string) $_POST['g-recaptcha-response']);
+ } elseif (isset($_POST['g_recaptcha_response'])) {
+     $recaptcha_response = trim((string) $_POST['g_recaptcha_response']);
+ }
  $recaptcha_ok = false;
  if ($recaptcha_response !== '') {
      $verify = @file_get_contents('https://www.google.com/recaptcha/api/siteverify?' . http_build_query([
@@ -43,7 +48,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
      }
  }
  if (!$recaptcha_ok) {
-     $message = 'Please complete the reCAPTCHA to prove you\'re not a robot.';
+     $message = 'Please complete the reCAPTCHA to prove you\'re not a robot. If you did, your domain may not be allowed—add it at google.com/recaptcha/admin.';
      $status = "false";
      echo json_encode(array( 'message' => $message, 'status' => $status));
      exit;

@@ -25,8 +25,7 @@
     <link rel="stylesheet" href="assets/css/rtl.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
-    <!-- reCAPTCHA v2 - Get your keys at https://www.google.com/recaptcha/admin -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- reCAPTCHA: loaded at bottom so widget renders after form is in DOM -->
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" href="assets/images/favicon/favicon-32x32.jpg" sizes="32x32">
@@ -354,8 +353,8 @@
                                         </div>
                                     </div>
                                     <div class="col-xl-12">
-                                        <div class="input-box recaptcha-box">
-                                            <!-- Replace with your Site Key from https://www.google.com/recaptcha/admin (reCAPTCHA v2 "I'm not a robot") -->
+                                        <div class="input-box recaptcha-box" style="min-height:90px; overflow:visible;">
+                                            <p class="field-label" style="margin-bottom:10px;">Security check — please complete the box below</p>
                                             <div class="g-recaptcha" id="estimate-recaptcha" data-sitekey="6Lcw-H8sAAAAANJqxA1LZN1lEgK6fuQqtpOH7dwc"></div>
                                             <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response-input">
                                             <label id="recaptcha-error" class="recaptcha-error" style="display:none; color:#c00; margin-top:8px;">Please complete the reCAPTCHA.</label>
@@ -559,6 +558,19 @@
 <script src="assets/js/parallax.min.js"></script>
 <script src="assets/js/jquery.tinyscrollbar.js"></script>
 <script src="assets/js/jQuery.style.switcher.min.js"></script>
+<!-- reCAPTCHA: load after DOM so widget can render into #estimate-recaptcha -->
+<script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit" async defer></script>
+<script>
+function onRecaptchaLoad() {
+  var el = document.getElementById('estimate-recaptcha');
+  if (el && typeof grecaptcha !== 'undefined' && grecaptcha.render) {
+    grecaptcha.render('estimate-recaptcha', {
+      sitekey: '6Lcw-H8sAAAAANJqxA1LZN1lEgK6fuQqtpOH7dwc',
+      theme: 'light'
+    });
+  }
+}
+</script>
 <!-- thm custom script -->
 <script src="assets/js/custom.js"></script>
 
